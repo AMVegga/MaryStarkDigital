@@ -1,9 +1,9 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Courier New", monospace;
     margin: 0;
     padding: 0;
-    background-color: #eb7099; /* Rosado claro */
-    color: black;
+    background-color: black;
+    color: rgb(82, 255, 3);
 }
 
 /* Encabezado */
@@ -14,14 +14,34 @@ header {
     padding: 20px;
 }
 
+h1 {
+    color: white;
+}
+
+/* Logo + Título */
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap; /* YA ES RESPONSIVE */
+}
+
+.logo {
+    height: 70px;
+    border-radius: 15px;
+}
+
+/* NAV */
 nav ul {
     list-style: none;
     padding: 0;
+    margin-top: 10px;
 }
 
 nav ul li {
-    display: inline;
-    margin: 0 15px;
+    display: inline-block;
+    margin: 0 12px;
 }
 
 nav ul li a {
@@ -32,10 +52,10 @@ nav ul li a {
 
 /* Banner */
 .banner {
-    background: linear-gradient(to right, #ff80ab, #64b5f6); /* Rosado y celeste */
+    background: linear-gradient(to right, black, #010af6);
     text-align: center;
     padding: 50px 20px;
-    color: white;
+    color: rgb(82, 255, 3);
     font-size: 24px;
 }
 
@@ -46,45 +66,34 @@ nav ul li a {
 }
 
 .productos-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Responsive */
     justify-content: center;
     gap: 20px;
-    flex-wrap: wrap;
+    padding: 10px;
 }
 
 .producto {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    background: rgba(12, 12, 12, 0.992);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     text-align: center;
-    width: 200px;
+    width: 100%;
+    height: auto;
 }
 
 .producto img {
     width: 100%;
-    border-radius: 10px;
-}
-
-.producto button {
-    background-color: #ff4081; /* Rosado */
-    color: white;
-    border: none;
-    padding: 10px;
-    width: 100%;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.producto button:hover {
-    background-color: #d81b60;
+    height: auto;
+    max-height: 250px;
+    object-fit: contain;
 }
 
 /* Contacto */
 .contacto {
-    background-color: #64b5f6; /* Celeste */
-    color: white;
+    background-color: black;
+    color: #39FF14;
     text-align: center;
     padding: 30px 20px;
 }
@@ -97,16 +106,19 @@ footer {
     padding: 10px;
 }
 
-.pago {
+/* Pago / Carrito */
+.pago,
+.carrito {
     text-align: center;
     padding: 30px;
-    background-color: white;
+    background-color: black;
     margin: 20px auto;
     width: 50%;
     border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
 }
 
+/* Inputs y botones */
 form {
     display: flex;
     flex-direction: column;
@@ -114,15 +126,18 @@ form {
 }
 
 input {
-    margin: 10px;
+    margin: 10PX;
     padding: 8px;
-    width: auto;
-    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #0e0909a3;
     border-radius: 10px;
+    position: center;    
 }
 
 button {
-    background-color: #720127;
+    font-family: "Courier New";
+    background-color: #010af6;
     color: white;
     padding: 10px;
     border: none;
@@ -132,17 +147,49 @@ button {
 }
 
 button:hover {
-    background-color: #d81b60;
+    background-color: #000000;
+    transform: translateY(-3px);
 }
 
-.carrito {
-    text-align: center;
-    padding: 30px;
-    background-color: white;
-    margin: 20px auto;
-    width: 50%;
+.button-whatsapp {
+    background-color: #17e91eb7;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: auto;
     border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.button-whatsapp:hover {
+  background: #0c822c;
+  transform: translateY(-3px);
+}
+
+.btn-paypal {  
+  background: linear-gradient(to right, black, #0079C1);
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-paypal:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.btn-paypal:active {
+  transform: scale(0.98);
+}
+
+.pp-icon {
+  width: 22px;
+  margin-right: 15px;
 }
 
 .carrito ul {
@@ -153,14 +200,14 @@ button:hover {
 .carrito ul li {
     display: flex;
     justify-content: space-between;
-    background: #f8bbd0; /* Rosado */
+    background: black;
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
 }
 
 .carrito button {
-    background-color: #d81b60;
+    background-color: #0400f7;
     color: white;
     padding: 5px 10px;
     border: none;
@@ -169,10 +216,103 @@ button:hover {
 }
 
 .carrito button:hover {
-    background-color: #880e4f;
+    background-color: black;
 }
 
+/* Enlaces */
 a {
-    color: white; 
-    text-decoration: 0;
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #39FF14;
+    text-decoration: underline;
+}
+
+.linkpaypal {
+    color: white;
+}
+
+.linkpaypal:hover {
+    color: #1418ff;
+}
+
+/* ---------------------- */
+/*      RESPONSIVE        */
+/* ---------------------- */
+
+/* TABLETS */
+@media (max-width: 900px) {
+
+    .pago,
+    .carrito {
+        width: 80%;
+    }
+
+    .banner {
+        font-size: 21px;
+    }
+
+    .producto img {
+        max-height: 220px;
+    }
+}
+
+/* MÓVILES */
+@media (max-width: 600px) {
+
+    header {
+        padding: 12px;
+    }
+
+    .logo {
+        height: 50px;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 6px 0;
+    }
+
+    .banner {
+        font-size: 18px;
+        padding: 25px 10px;
+    }
+
+    .productos {
+        padding: 30px 10px;
+    }
+
+    .productos-container {
+        grid-template-columns: 1fr; /* UNA sola columna en móviles */
+    }
+
+    .producto {
+        width: 95%;
+        max-width: 340px;
+        margin: auto;
+    }
+
+    .pago,
+    .carrito {
+        width: 95%;
+        padding: 20px;
+    }
+
+    input {
+        width: 95%;
+    }
+
+    button,
+    .btn-paypal {
+        width: 90%;
+        font-size: 15px;
+    }
+
+    .carrito ul li {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
 }

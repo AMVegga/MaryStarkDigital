@@ -63,32 +63,24 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrarCarrito();
 });
 
-// Evento para agregar productos desde productos.html
-document.querySelectorAll(".agregar-carrito").forEach((boton) => {
+// Evento para agregar productos desde index.html
+document.querySelectorAll(".agregar-carrito").forEach(boton => {
     boton.addEventListener("click", () => {
-        const nombre = boton.dataset.nombre;
-        const precio = boton.dataset.precio;
-        agregarAlCarrito(nombre, precio);
-    });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-    actualizarTotalPaypal();
+        agregarAlCarrito(boton.dataset.nombre, boton.dataset.precio);
+        actualizarContadorCarrito();
+
+        // Si estamos en carrito.html, actualizamos PayPal
+        if (document.getElementById("paypal-link")) {
+            mostrarCarrito();
+            actualizarTotalPaypal();
+        }
+    });
 });
 
 // Función para obtener el carrito desde localStorage
 function obtenerCarrito() {
     return JSON.parse(localStorage.getItem("carrito")) || []; // Si no hay carrito, devuelve un array vacío
-}
-
-function actualizarTotalPaypal() {
-    let total = calcularTotalCarrito();
-
-    // Actualiza el texto del total en la página
-    document.getElementById("total-carrito").textContent = `$${total}`;
-
-    // Actualiza el campo hidden de PayPal con el total correcto
-    document.getElementById("paypal-amount").value = total;
 }
 
 // Función para calcular el total del carrito
@@ -103,12 +95,38 @@ function calcularTotalCarrito() {
 }
 
 // Función para actualizar el total en PayPal
+document.addEventListener("DOMContentLoaded", () => {
+    actualizarTotalPaypal();
+});
 function actualizarTotalPaypal() {
-    let total = calcularTotalCarrito();
+    const total = calcularTotalCarrito();
 
-    // Mostrar el total en la página
-    document.getElementById("total-carrito").textContent = `$${total}`;
+    const totalEl = document.getElementById("contador-carrito");
+    const linkEl = document.getElementById("paypal-link");
 
-    // Actualizar el valor en el formulario de PayPal
-    document.getElementById("paypal-amount").value = total;
+    if (!totalEl || !linkEl) return; // ← IMPORTANTE (evita fallos en index.html)
+
+    totalEl.textContent = `$${total}`;
+
+    const link =
+        "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick" +
+        "&business=maryannv25%40hotmail.com" +
+        "&item_name=Compra+en+Mi+Tienda" +
+        "&currency_code=USD" +
+        "&amount=" + encodeURIComponent(total);
+
+    linkEl.href = link;
 }
+
+// Funcion buscador de productos en la seccion productos //
+
+function buscarProductos2() {
+    let input = document.getElementById("buscador2").value.toLowerCase();
+    let productos = document.querySelectorAll(".producto");
+
+    productos.forEach(producto => {
+        let nombre = producto.getAttribute("data-nombre").toLowerCase();
+        producto.style.display = nombre.includes(input) ? "block" : "none";
+    });
+}
+

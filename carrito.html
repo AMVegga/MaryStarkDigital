@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito - MaryGadgets</title>
+    <title>Carrito - MaryStark Digital</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <header>
-        <h1>Carrito de Compras</h1>
-        <a href="productos.html">Seguir Comprando</a>
+        <h1 style="color: #39FF14;">Carrito de Compras</h1>
+    <nav>
+       <ul>
+        <strong><a href="index.html">Volver al inicio</a></strong>
+       </ul>
+    </nav>
     </header>
 
-    <section class="carrito">
-        <h2>Tu Carrito</h2>
-        <ul id="lista-carrito"></ul>
+    <section class="carrito">        
+        <strong><ul id="lista-carrito"></ul></strong>
         <p><strong>Total: $<span id="total">0</span></strong></p>
-        <button id="vaciar-carrito">Vaciar Carrito</button>  
-        <button><a href="pago.html">Proceder al pago</a></button>              
+        <button id="vaciar-carrito">Vaciar Carrito</button>                        
     </section>    
-
+    <div id="paypal-container-YE5AW83D6XKSY"></div>
+<script>
+  paypal.HostedButtons({
+    hostedButtonId: "YE5AW83D6XKSY",
+  }).render("#paypal-container-YE5AW83D6XKSY")
+</script>
     <script src="script.js"></script>
 </body>
 </html>

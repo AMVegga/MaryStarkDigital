@@ -5,20 +5,269 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrador</title>
     <link rel="stylesheet" href="styles.css">
+     <script>
+    if (prompt("Introduce la contraseña:") !== "0") {
+      alert("Acceso denegado");
+      window.location.href = "index.html";
+    }
+  </script>
+
+    <style>
+        /* Estilos recomendados */
+        body {            
+            background-image: 
+            linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+            url("FondoAdmin.jpg");
+            background-size: cover;       /* La imagen cubre toda la pantalla */
+            background-repeat: no-repeat; /* Evita que se repita */
+            background-position: center;  /* Centrada */
+            background-attachment: fixed;           
+        }
+        .producto img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .producto button {
+            margin: 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .editar-producto {
+            background: #081fef;
+            color: white;
+        }
+        .eliminar-producto {
+            background: #fc1b02;
+            color: white;
+        }
+    </style>
+
 </head>
 <body>
     <div>
     <section class="formulario-producto">
-    <h2 style="text-align: center;">Agregar producto nuevo</h2>
-    <center><button><a href="index.html">Volver a inicio</a></button></center>
-    <form id="form-producto">
-        <input type="text" id="nombre" placeholder="Nombre del producto" required>
-        <input type="number" id="precio" placeholder="Precio" required step="0.01">
-        <input style="border-radius: 10px;" type="file" id="imagen" accept="image/*" />        
-        <button type="submit">Subir producto</button>
-    </form>
-    <script src="script.js"></script>
+        <center><h1>Bienvenida MaryStark!</h1></center>
+        <h2 style="text-align: center;">Agregar producto nuevo</h2>
+        <center><strong><a href="index.html">Volver al inicio</a></strong></center>
+
+        <form id="form-producto">
+            <input type="text" id="nombre" placeholder="Nombre del producto" required>
+            <input type="number" id="precio" placeholder="Precio" required step="0.01">
+            <input type="text" id="clase" placeholder="Clase" required>
+            <input style="border-radius: 10px;" type="file" id="imagen" accept="image/*" />
+            <button type="submit">Subir producto</button>
+        </form>
+
+     <section id="productos" class="productos">
+        <h2>Últimos Productos Agregados</h2>
+        <div class="productos-container" id="productos-container"></div>
+    </section>
+
+<script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js";
+
+    // ⬅️ REEMPLAZA ESTAS DOS LÍNEAS
+    const supabaseUrl = "https://lnceafmmakkkiebkmfne.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxuY2VhZm1tYWtra2llYmttZm5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NTcyMTcsImV4cCI6MjA3OTEzMzIxN30.fH0lC-gukHznlC2zpg3qkZpzNy6U3h4HV4HdV4XuvkM";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const contenedor = document.getElementById("productos-container");
+    const form = document.getElementById("form-producto");
+
+    let editId = null; // Para saber si estamos editando
+
+    // ==============================
+    // Cargar productos
+    // ==============================
+    async function cargarProductos() {
+        const { data: productos, error } = await supabase
+            .from("productos")
+            .select("*")
+            .order("id", { ascending: false });
+
+        if (error) {
+            console.error("Error cargando productos:", error);
+            contenedor.innerHTML = "<p>No se pudieron cargar los productos.</p>";
+            return;
+        }
+
+        contenedor.innerHTML = ""; 
+
+        productos.forEach(prod => {
+            const div = document.createElement("div");
+            div.classList.add("producto");
+
+            div.innerHTML = `
+                <img src="${prod.imagen || 'https://via.placeholder.com/150'}">
+                <h3>${prod.nombre}</h3>
+                <p>$${prod.precio}</p>
+
+                <button class="editar-producto" data-id="${prod.id}">
+                    Editar
+                </button>
+
+                <button class="eliminar-producto" data-id="${prod.id}">
+                    Eliminar
+                </button>
+            `;
+
+            contenedor.appendChild(div);
+        });
+
+        activarBotones();
+    }
+
+    // ==============================
+    // Activar botones editar/eliminar
+    // ==============================
+    function activarBotones() {
+
+        // ---- ELIMINAR ----
+        document.querySelectorAll(".eliminar-producto").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.dataset.id;
+
+                if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+
+                const { error } = await supabase
+                    .from("productos")
+                    .delete()
+                    .eq("id", id);
+
+                if (error) {
+                    alert("Error eliminando el producto");
+                    console.error(error);
+                    return;
+                }
+
+                alert("Producto eliminado");
+                cargarProductos();
+            });
+        });
+
+        // ---- EDITAR ----
+        document.querySelectorAll(".editar-producto").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.dataset.id;
+                editId = id;
+
+                const { data, error } = await supabase
+                    .from("productos")
+                    .select("*")
+                    .eq("id", id)
+                    .single();
+
+                if (error) {
+                    alert("Error cargando el producto para editar");
+                    return;
+                }
+
+                // Llenar formulario con datos
+                document.getElementById("nombre").value = data.nombre;
+                document.getElementById("precio").value = data.precio;
+                document.getElementById("clase").value = data.clase;
+
+                form.querySelector("button[type='submit']").textContent = "Actualizar producto";
+            });
+        });
+    }
+
+    cargarProductos();
+
+    // ==============================
+    // Crear o actualizar producto
+    // ==============================
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre").value;
+        const precio = parseFloat(document.getElementById("precio").value);
+        const clase = document.getElementById("clase").value;
+        const archivo = document.getElementById("imagen").files[0];
+
+        let urlImagen = null;
+
+        // Subir nueva imagen si se selecciona
+        if (archivo) {
+            const nombreArchivo = `${Date.now()}_${archivo.name}`;
+
+            const { error: imagenError } = await supabase
+                .storage
+                .from("productos")
+                .upload(nombreArchivo, archivo);
+
+            if (imagenError) {
+                alert("Error subiendo imagen");
+                return;
+            }
+
+            const { data: publicUrl } = supabase
+                .storage
+                .from("productos")
+                .getPublicUrl(nombreArchivo);
+
+            urlImagen = publicUrl.publicUrl;
+        }
+
+        // ==============================
+        // ACTUALIZAR PRODUCTO
+        // ==============================
+        if (editId) {
+            const updateData = {
+                nombre: nombre,
+                precio: precio,
+                clase: clase
+            };
+
+            if (urlImagen) updateData.imagen = urlImagen;
+
+            const { error } = await supabase
+                .from("productos")
+                .update(updateData)
+                .eq("id", editId);
+
+            if (error) {
+                alert("Error actualizando el producto");
+                return;
+            }
+
+            alert("Producto actualizado correctamente");
+            editId = null;
+            form.querySelector("button[type='submit']").textContent = "Subir producto";
+            form.reset();
+            cargarProductos();
+            return;
+        }
+
+        // ==============================
+        // INSERTAR NUEVO PRODUCTO
+        // ==============================
+        const { error } = await supabase
+            .from("productos")
+            .insert([{
+                nombre,
+                precio,
+                clase,
+                imagen: urlImagen
+            }]);
+
+        if (error) {
+            alert("Error guardando producto");
+            return;
+        }
+
+        alert("Producto agregado correctamente");
+        form.reset();
+        cargarProductos();
+    });
+
+</script>
+
 </section>
-</div>    
+</div>
 </body>
-</html>t
+</html>

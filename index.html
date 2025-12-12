@@ -3,35 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Virtual</title>
+    <meta name="description" content="Tienda digital de productos creados a medida: ebooks originales, apps móviles y de escritorio, servicios freelance de programación fullstack, música, intros en video y más. Descubre contenido digital único y hecho por un desarrollador creativo.">
+    <title>MaryStark Digital</title>
     <link rel="stylesheet" href="styles.css">
+    <script 
+    src="https://www.paypal.com/sdk/js?client-id=BAA72W7_CelSYwsVtNTcoqiRQCFuM3D_qpUOJWw3PIC_XwCJ2PL9uCJULZkl9Uhs77-khphtYHIQqMck-s&components=hosted-buttons&disable-funding=venmo&currency=USD">
+    </script>
+    
+    <style>
+        .typing {
+        width: 38ch;        /* Número de caracteres a mostrar */
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 3px solid #0f0; /* “Cursor” */
+        animation: typing 3s steps(35), blink .5s step-end infinite alternate;
+        }
+
+        @keyframes typing {
+        from { width: 0 }
+        }
+
+        @keyframes blink {
+        50% { border-color: transparent }
+        }
+        .buttonpaypal {
+        width: auto;
+        height: auto;
+        border-radius: 25px;
+        background: linear-gradient(to right, black, #010af6);;
+        }
+
+        .img {
+        width: 20vw;
+        height: 5vw;
+        border-radius: 25px;
+        }
+     
+    </style>
+
 </head>
 <body>
 
-    <!-- Encabezado -->
-    <header>
-        <h1>Bienvenidos a MaryGadgets</h1>
+    <!-- Encabezado -->  
+   <header class="brand">
+    <img src="logo.jpg" alt="" class="logo">
+    <h1 style="text-decoration: underline;">MaryStark Digital</h1>
+       
         <nav>
-            <ul>
-                <li><a href="inicio.html">Inicio</a></li>
-                <li><a href="productos.html">Productos</a></li>
-                <li><a href="contacto.html">Contacto</a></li>
-                <li><a href="pago.html">Pagar</a></li>
-                <li><a href="carrito.html">🛒 Ver Carrito (<span id="contador-carrito">0</span>)</a></li>
-                <li><a href="admin.html">🕵🏻‍♂️</a></li>
+            <ul>                                
+                <li><a href="contacto.html">Contacto</a></li>                
+                <li><a href="carrito.html">🛒Mi pedido (<span id="contador-carrito">0</span>)</a></li>
+                <li><a class="linkpaypal" id="paypal-link" href="#" target="_blank">Pagar con Paypal</a></li>
+                <li><a href="admin.html">Admin</a></li>
             </ul>
-        </nav>
+        </nav>     
     </header>
 
     <!-- Banner -->
     <section id="inicio" class="banner">
-        <h2>La mejor tienda en electronica, tecnologia y mas</h2>
+        <h2 class="typing" style="color: #39FF14;">Lo mejor en productos digitales y mas</h2>
     </section>
+
+    <div>    
+    <center><input type="text" id="buscador2" placeholder="Buscar" onkeyup="buscarProductos2()"></center>
+    </div>
 
     <!-- Sección de productos -->
 
-   <section id="productos" class="productos">
-    <h2>Últimos Productos Agregados</h2>
+   <section id="productos" class=".agregar-carrito">
+    <center><h2 style="color: #39FF14; font-size: medium;">Busca ebooks, musica sin copyright, y mas</h2></center>
     <div class="productos-container" id="productos-container"></div>
 </section>
 <script type="module">
@@ -84,41 +124,29 @@
 
         botones.forEach(btn => {
             btn.addEventListener("click", () => {
-                alert(`Añadido: ${btn.dataset.nombre}`);
+                const nombre = btn.dataset.nombre;
+                const precio = btn.dataset.precio;
+
+                agregarAlCarrito(nombre, precio);
             });
         });
+        
     }
 
     cargarProductos();
 </script>
-
-    <center><button>
-        
-        <p>Total a pagar: <span id="total-carrito">$0.00</span></p>
-        
-        <form id="paypal-form" action="https://www.paypal.com/" method="post">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="maryannv25@hotmail.com">
-        <input type="hidden" name="item_name" value="Compra en Mi Tienda">
-        <input type="hidden" name="amount" id="paypal-amount" value="0"> <!-- Se actualizará con JS -->
-        <input type="hidden" name="currency_code" value="USD">
-        <input type="submit" value="Pagar con PayPal">
-                    
-    </form>
-    <script src="script.js"></script>    
-    </button>
-    </center>    
-
+  
     <!-- Contacto -->
     <section id="contacto" class="contacto">
         <h2>Contacto</h2>
-        <button><a href="mailto:contacto@MaryGadgets.com">Enviar correo a contacto@MaryGadgets.com</a></button>        
-        <p>Teléfono: +123 456 7890</p>
+        <a href="mailto:maryveggastark@gmail.com">Enviar correo a maryveggastark@gmail.com</a>
+        
     </section>
 
     <!-- Pie de página -->
     <footer>
-        <p>&copy; 2025 MaryGadgets - Todos los derechos reservados</p>
-    </footer>        
+        <p>&copy; 2026 MaryStark Digital - Todos los derechos reservados</p>
+    </footer>  
+    <script src="script.js"></script>      
 </body>
 </html>
